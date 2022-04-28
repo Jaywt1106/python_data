@@ -45,15 +45,19 @@ knr.fit(train_scaled, train_target)
 
 train과 test 각각의 score를 계산한다.
 ```python
-print(knr.score(train_scaled, train_target))
-print(knr.score(test_scaled, test_target))
+print("knr train score", knr.score(train_scaled, train_target))
+print("knr test score",knr.score(test_scaled, test_target))
 ```
+_결과: 0.888451451339183, 0.8214245569556612_
 
 Age와 KM를 넣고 Price를 예측해본다. 여기서는 각 모델에 [[20, 40000]], [[20, 50000]]을 예측해봤다.
+KNN 20, 40000 predic result를 써두면 어떤 결과인지 한눈에 알기 쉽다
 ```python
 print("KNN 20, 40000 predic result:", knr.predict([[20, 40000]]))
 print("KNN 20, 50000 predic result:", knr.predict([[20, 50000]]))
 ```
+_결과: 6460, 6460_
+k neighbors이기 때문에 둘의 결과가 똑같은 것이 맞다.
 
 ## Linear 회귀
 linear_model에서 LinearRegression을 사용한다.
@@ -65,27 +69,31 @@ lr.fit(train_scaled, train_target)
 
 train과 test 각각의 score를 계산한다.
 ```python
-print(lr.score(train_scaled, train_target))
-print(lr.score(test_scaled, test_target))
+print("lr train score", lr.score(train_scaled, train_target))
+print("lr test score", lr.score(test_scaled, test_target))
 ```
+_결과: 0.7971133926944495, 0.7698166134656372_
 
 [[20, 40000]], [[20, 50000]]을 예측한다.
 ```python
-print(lr.predict([[20, 40000]]))
-print(lr.predict([[20, 50000]]))
+print("L 20, 40000 predic result:", lr.predict([[20, 40000]]))
+print("L 20, 50000 predic result:", lr.predict([[20, 50000]]))
 ```
-
+_결과: -24303688.35360172, -30368071.69322803_
 결과가 음수가 나왔다. 표준화하지 않은 train_input을 사용해서 다시 LinearRegression을 사용해보았다.
 ```python
+from sklearn.linear_model import LinearRegression
 lr2 = LinearRegression()
 lr2.fit(train_input, train_target)
 print("lr2 train score", lr2.score(train_input, train_target))
 print("lr2 test score", lr2.score(test_input, test_target))
 print(lr2.predict([[26, 48000]]))
-print(lr2.coef_, lr2.intercept_)
-print("L 20, 40000 predic result:", lr2.predict([[20, 40000]]))
-print("L 20, 50000 predic result:", lr2.predict([[20, 50000]]))
+print(lr2.coef_, lr.intercept_)
+print("L2 20, 40000 predic result:", lr2.predict([[20, 40000]]))
+print("L2 20, 50000 predic result:", lr2.predict([[20, 50000]]))
 ```
+_score 결과: 0.797113392694449, 0.7698166134656372
+predict 결과: 16678.69087867, 16516.20084828_
 제대로 된 결과가 나왔다.
 
 ## 다중회귀
@@ -127,26 +135,30 @@ reg.fit(train_scaled, train_target)
 
 train과 test 각각의 score를 계산한다. 
 ```python
-print(reg.score(train_scaled, train_target))
-print(reg.score(test_scaled, test_target))
+print("reg train score", reg.score(train_scaled, train_target))
+print("reg test score", reg.score(test_scaled, test_target))
 ```
+_결과: 0.8390166377883685, 0.8176098739870958_
 
 [[20, 40000]], [[20, 50000]]을 예측한다.
 ```python
-print(reg.predict([[20, 40000]]))
-print(reg.predict([[20, 50000]]))
+print("REG 20, 40000 predic result:", reg.predict([[20, 40000]]))
+print("REG 20, 50000 predic result:", reg.predict([[20, 50000]]))
 ```
+_결과: 7952.34246575, 7952.34246575_
 
 max_depth를 10으로 두고 계산해봤다.
 ```python
 from sklearn.tree import DecisionTreeRegressor
 reg = DecisionTreeRegressor(max_depth = 10)
 reg.fit(train_scaled, train_target)
-print(reg.score(train_scaled, train_target))
-print(reg.score(test_scaled, test_target))
-print(reg.predict([[20, 40000]]))
-print(reg.predict([[20, 50000]]))
+print("reg train10 score", reg.score(train_scaled, train_target))
+print("reg test10 score", reg.score(test_scaled, test_target))
+print("REG10 20, 40000 predic result:", reg.predict([[20, 40000]]))
+print("REG10 20, 50000 predic result:", reg.predict([[20, 50000]]))
 ```
+_score 결과: 0.9584342271815486, 0.7448760749696672
+predict 결과: 6950, 6950_
 
 ## 그리드서치로 최적의 매개변수 찾기
 params를 min_impurity_decrease로 두고 최적의 매개변수를 찾아봤다.
@@ -156,10 +168,13 @@ params = {'min_impurity_decrease': [0.0001, 0.0002, 0.0003, 0.0004, 0.0005]}
 gs = GridSearchCV(DecisionTreeRegressor(random_state=42), params, n_jobs=-1)
 gs.fit(train_input, train_target)
 dt = gs.best_estimator_
-print(dt.score(train_input, train_target))
+print("DT train score", dt.score(train_input, train_target))
+print("DT test score", dt.score(train_input, train_target))
 print(gs.best_params_)
 print(gs.cv_results_['mean_test_score'])
 ```
+_score결과: 0.9996482084930518, 0.9996482084930518
+{'min_impurity_decrease': 0.0001}_
 
 params를 머신러닝 책에 나왔던 것과 똑같게 min_impurity_decrease, max_depth, min_samples_split로 두었다. 숫자도 책과 같다.
 ```python
@@ -171,9 +186,12 @@ params = {'min_impurity_decrease' : np.arange(0.0001, 0.001, 0.0001),
 gs = GridSearchCV(DecisionTreeRegressor(random_state=42), params, n_jobs=-1)
 gs.fit(train_input, train_target)
 dt = gs.best_estimator_
-print(dt.score(train_input, train_target))
+print("DT2 train score", dt.score(train_input, train_target))
+print("DT2 test score", dt.score(train_input, train_target))
 print(gs.best_params_)
 ```
+_score 결과: 0.8686622946615553, 0.8686622946615553
+{'max_depth': 7, 'min_impurity_decrease': 0.0001, 'min_samples_split': 52}_
 
 ## 최상 매개변수로 돌리기
 위에서 나온 최상의 매개변수를 넣어 분석을 돌렸다.
@@ -182,9 +200,10 @@ from sklearn.model_selection import GridSearchCV
 params = {'min_impurity_decrease': [0.0001], 'max_depth' : [7], 'min_samples_split' : [52]}
 gs = GridSearchCV(DecisionTreeRegressor(random_state=42), params, n_jobs=-1)
 gs.fit(train_input, train_target)
-print(reg.predict([[20, 40000]]))
-print(regr.predict([[20, 50000]]))
+print("REGGS 20, 40000 predic result:", reg.predict([[20, 40000]]))
+print("REGGS 20, 50000 predic result:", reg.predict([[20, 50000]]))
 ```
+_결과: 6950, 6950_
 
 ## randomforest회귀
 ```python
@@ -200,10 +219,20 @@ scores = cross_validate(regr, train_input, train_target, return_train_score=True
 print(np.mean(scores['train_score']), np.mean(scores['test_score']))
 regr.fit(train_input, train_target)
 ```
+_결과: 0.9755272749505878 0.8226518232374758_
 
 가장 중요한 변수를 찾아본다. [[20, 40000]], [[20, 50000]]을 예측한다.
 ```python
 print(regr.feature_importances_)
-print(regr.predict([[20, 40000]]))
-print(regr.predict([[20, 50000]]))
+print("REGR 20, 40000 predic result:", regr.predict([[20, 40000]]))
+print("REGR 20, 50000 predic result:", regr.predict([[20, 50000]]))
 ```
+_중요도: [0.87743731 0.12256269]
+predict 결과: 17520.48, 19905_
+
+random - oob활용 허용한다.
+regr = RandomForestRegressor(oob_score=True, random_state=42, n_jobs=-1)
+regr.fit(train_input, train_target)
+print("REGROBB 20, 40000 predic result:", regr.predict([[20, 40000]]))
+print("REGROBB 20, 50000 predic result:", regr.predict([[20, 50000]]))
+_predict 결과: 17520.48, 19905_
