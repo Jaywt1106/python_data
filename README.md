@@ -115,16 +115,20 @@ lr.fit(train_poly, train_target)
 
 train과 test 각각의 score를 계산한다. test_name, "score: "를 넣어주면 어떤 score인지 쉽게 알 수 있다.
 ```python
-print(test_name, "score: ", lr.score(train_poly, train_target))
-print(test_name, "score: ",lr.score(test_poly, test_target))
+print("poly train score: ", lr.score(train_poly, train_target))
+print("poly test score: ",lr.score(test_poly, test_target))
 ```
+_score 결과: 0.8358698063795749, 0.8277360186977837_
+
 [[20, 40000]], [[20, 50000]]을 예측한다.
 ```python
 predict_input_poly1 = poly.transform([[20, 40000]])
-print(test_name, "lr(20, 40000)====>", lr.predict(predict_input_poly1))
+print("poly 20, 40000 predic result:", lr.predict(predict_input_poly1))
 predict_input_poly2 = poly.transform([[20, 50000]])
-print(test_name, "lr(20, 50000)====>", lr.predict(predict_input_poly2))
+print("poly 20, 50000 predic result:", lr.predict(predict_input_poly2))
 ```
+_predict 결과: 17402.56704151, 17248.08602732_
+
 ## decisiontree회귀
 tree에서 DecisionTreeRegressor를 사용한다.
 ```python
@@ -236,3 +240,7 @@ regr.fit(train_input, train_target)
 print("REGROBB 20, 40000 predic result:", regr.predict([[20, 40000]]))
 print("REGROBB 20, 50000 predic result:", regr.predict([[20, 50000]]))
 _predict 결과: 17520.48, 19905_
+
+
+### 함수로 
+함수로 묶어서 정리하면 결과값을 보는게 더 편하다
