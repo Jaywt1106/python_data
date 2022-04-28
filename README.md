@@ -51,8 +51,43 @@ print(knr.score(train_scaled, train_target))
 print(knr.score(test_scaled, test_target))
 ```
 
-
+Age와 KM를 넣고 Price를 예측해본다. 여기서는 각 모델에 [[20, 40000]], [[20, 50000]]을 예측해봤다.
 ```python
-print("KNN 20, 40000 predic result:", knr.predict([[26, 40000]]))
-print("KNN 20, 50000 predic result:", knr.predict([[26, 50000]]))
+print("KNN 20, 40000 predic result:", knr.predict([[20, 40000]]))
+print("KNN 20, 50000 predic result:", knr.predict([[20, 50000]]))
 ```
+
+
+## Linear 회귀
+linear_model에서 LinearRegression을 사용한다.
+```python
+from sklearn.linear_model import LinearRegression
+lr = LinearRegression()
+lr.fit(train_scaled, train_target)
+```
+
+
+train과 test 각각의 score를 계산한다.
+```python
+print(lr.score(train_scaled, train_target))
+print(lr.score(test_scaled, test_target))
+```
+
+[[20, 40000]], [[20, 50000]]을 예측한다.
+```python
+print(lr.predict([[20, 40000]]))
+print(lr.predict([[20, 50000]]))
+```
+
+결과가 음수가 나왔다. 표준화하지 않은 train_input을 사용해서 다시 LinearRegression을 사용해보았다.
+```python
+lr2 = LinearRegression()
+lr2.fit(train_input, train_target)
+print("lr2 train score", lr2.score(train_input, train_target))
+print("lr2 test score", lr2.score(test_input, test_target))
+print(lr2.predict([[26, 48000]]))
+print(lr2.coef_, lr2.intercept_)
+print("L 20, 40000 predic result:", lr2.predict([[20, 40000]]))
+print("L 20, 50000 predic result:", lr2.predict([[20, 50000]]))
+```
+제대로 된 결과가 나왔다.
