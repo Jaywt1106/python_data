@@ -118,7 +118,6 @@ predict_input_poly2 = poly.transform([[20, 50000]])
 print(test_name, "lr(20, 50000)====>", lr.predict(predict_input_poly2))
 ```
 ## 다중회귀decisiontree회귀
-## decisiontree회귀
 tree에서 DecisionTreeRegressor를 사용한다.
 ```python
 from sklearn.tree import DecisionTreeRegressor
@@ -149,7 +148,7 @@ print(reg.predict([[20, 40000]]))
 print(reg.predict([[20, 50000]]))
 ```
 
-#그리드서치로 최적의 매개변수 찾기
+## 그리드서치로 최적의 매개변수 찾기
 params를 min_impurity_decrease로 두고 최적의 매개변수를 찾아봤다.
 ```python
 from sklearn.model_selection import GridSearchCV
@@ -176,7 +175,7 @@ print(dt.score(train_input, train_target))
 print(gs.best_params_)
 ```
 
-#최상 매개변수로 돌리기
+## 최상 매개변수로 돌리기
 위에서 나온 최상의 매개변수를 넣어 분석을 돌렸다.
 ```python
 from sklearn.model_selection import GridSearchCV
@@ -187,7 +186,7 @@ print(reg.predict([[20, 40000]]))
 print(regr.predict([[20, 50000]]))
 ```
 
-#randomforest회귀
+## randomforest회귀
 ```python
 cross_validate를 활용해 교차검증을 한다. ensemble에서 RandomForestRegressor를 사용한다.
 from sklearn.model_selection import cross_validate
