@@ -264,7 +264,7 @@ def linear_normal(test_name, train_input, train_target, test_input, test_target)
         print(test_name, "score====>", lr.score(train_input, train_target))
         print(test_name, "20, 40000====>", lr.predict([[20, 40000]]))
         print(test_name, "20, 50000====>", lr.predict([[20, 50000]]))
-        ```
+```
         
 ## 2) 다중회귀 묶기
 ```python
@@ -286,7 +286,7 @@ def linear_multiple(test_name, train_input, train_target, test_input, test_targe
         print(test_name, "lr(20, 40000)====>", lr.predict(predict_input_poly1))
         predict_input_poly2 = poly.transform([[20, 50000]])
         print(test_name, "lr(20, 50000)====>", lr.predict(predict_input_poly2))
-        ```
+```
         
 ```python
 cars = pd.read_csv('c:\\workspace\\downloads\\ToyotaCorolla.csv')
