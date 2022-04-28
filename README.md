@@ -235,12 +235,83 @@ _중요도: [0.87743731 0.12256269]
 predict 결과: 17520.48, 19905_
 
 random - oob활용 허용한다.
+```python
 regr = RandomForestRegressor(oob_score=True, random_state=42, n_jobs=-1)
 regr.fit(train_input, train_target)
 print("REGROBB 20, 40000 predic result:", regr.predict([[20, 40000]]))
 print("REGROBB 20, 50000 predic result:", regr.predict([[20, 50000]]))
 _predict 결과: 17520.48, 19905_
+```
 
-
-### 함수로 
+## 함수로 묶기
 함수로 묶어서 정리하면 결과값을 보는게 더 편하다
+```python
+from pyexpat import features
+import numpy as np
+import pandas as pd
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import PolynomialFeatures, StandardScaler
+from sklearn.preprocessing import PolynomialFeatures
+```
+
+## 1) Linear회귀 묶기
+```python
+def linear_normal(test_name, train_input, train_target, test_input, test_target):
+        #linear 회귀
+        lr = LinearRegression()
+        lr.fit(train_input, train_target)
+        print(test_name, "score====>", lr.score(train_input, train_target))
+        print(test_name, "20, 40000====>", lr.predict([[20, 40000]]))
+        print(test_name, "20, 50000====>", lr.predict([[20, 50000]]))
+        ```
+        
+## 2) 다중회귀 묶기
+```python
+def linear_multiple(test_name, train_input, train_target, test_input, test_target): 
+        # print("=====> Before PolynomialFeatures")
+        poly = PolynomialFeatures(include_bias=False)
+        poly.fit(train_input)
+        train_poly = poly.transform(train_input)
+        # print("=====> After poly.transform")
+        # print("train_poly:", train_poly.shape)
+        test_poly = poly.transform(test_input)
+        print("test_poly:", test_poly.shape)
+        lr = LinearRegression()
+        lr.fit(train_poly, train_target)
+        print(test_name, "score: ", lr.score(train_poly, train_target))
+        print(test_name, "score: ",lr.score(test_poly, test_target))
+
+        predict_input_poly1 = poly.transform([[20, 40000]])
+        print(test_name, "lr(20, 40000)====>", lr.predict(predict_input_poly1))
+        predict_input_poly2 = poly.transform([[20, 50000]])
+        print(test_name, "lr(20, 50000)====>", lr.predict(predict_input_poly2))
+        ```
+        
+```python
+cars = pd.read_csv('c:\\workspace\\downloads\\ToyotaCorolla.csv')
+data = cars[['Age', 'KM']].to_numpy()
+target = cars['Price'].to_numpy()
+train_input, test_input, train_target, test_target = train_test_split(data, target, random_state=42)
+```
+
+## linear회귀 표준화x
+```python
+linear_normal("notscaled", train_input, train_target, test_input, test_target)
+```
+_score 결과: 0.7971133926944495
+predict 결과: 16678.69087867, 16516.20084828_
+
+## linear회귀 표준화o
+```python
+linear_normal("scled", train_scaled, train_target, test_scaled, test_target)
+```
+_score 결과: 0.7971133926944495
+predict 결과: -24303688.35360172, -30368071.69322803_
+
+## 다중회귀 결과
+```python
+linear_multiple("multiple", train_input, train_target, test_input, test_target)
+```
+_score 결과: 0.8358698063795749, 0.8277360186977837
+predict 결과: 17402.56704151, 17248.08602732_
