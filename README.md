@@ -12,7 +12,6 @@ data = cars[['Age', 'KM']].to_numpy()
 target = cars['Price'].to_numpy()
 ```
 
-
 data와 target이 제대로 들어갔는지 확인한다.
 ```python
 print(data.shape)
@@ -36,7 +35,6 @@ train_scaled = ss.transform(train_input)
 test_scaled = ss.transform(test_input)
 ```
 
-
 ## K 근접 이웃 회귀
 neighbors에서 KNeighborsRegressor를 사용한다.
 ```python
@@ -57,7 +55,6 @@ print("KNN 20, 40000 predic result:", knr.predict([[20, 40000]]))
 print("KNN 20, 50000 predic result:", knr.predict([[20, 50000]]))
 ```
 
-
 ## Linear 회귀
 linear_model에서 LinearRegression을 사용한다.
 ```python
@@ -65,7 +62,6 @@ from sklearn.linear_model import LinearRegression
 lr = LinearRegression()
 lr.fit(train_scaled, train_target)
 ```
-
 
 train과 test 각각의 score를 계산한다.
 ```python
@@ -91,3 +87,33 @@ print("L 20, 40000 predic result:", lr2.predict([[20, 40000]]))
 print("L 20, 50000 predic result:", lr2.predict([[20, 50000]]))
 ```
 제대로 된 결과가 나왔다.
+
+## 다중회귀
+다중회귀를 위해서 새로운 변수를 추가해준다. 이때 PolynomialFeatures를 사용한다. 
+```python
+from sklearn.preprocessing import PolynomialFeatures
+poly = PolynomialFeatures(include_bias=False)
+poly.fit(train_input)
+train_poly = poly.transform(train_input)
+test_poly = poly.transform(test_input)
+print("test_poly:", test_poly.shape)
+```
+
+linear_model에서 LinearRegression을 사용한다.
+```python
+lr = LinearRegression()
+lr.fit(train_poly, train_target)
+```
+
+train과 test 각각의 score를 계산한다. test_name, "score: "를 넣어주면 어떤 score인지 쉽게 알 수 있다.
+```python
+print(test_name, "score: ", lr.score(train_poly, train_target))
+print(test_name, "score: ",lr.score(test_poly, test_target))
+```
+[[20, 40000]], [[20, 50000]]을 예측한다.
+```python
+predict_input_poly1 = poly.transform([[20, 40000]])
+print(test_name, "lr(20, 40000)====>", lr.predict(predict_input_poly1))
+predict_input_poly2 = poly.transform([[20, 50000]])
+print(test_name, "lr(20, 50000)====>", lr.predict(predict_input_poly2))
+```
