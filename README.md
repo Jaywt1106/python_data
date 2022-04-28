@@ -117,7 +117,7 @@ print(test_name, "lr(20, 40000)====>", lr.predict(predict_input_poly1))
 predict_input_poly2 = poly.transform([[20, 50000]])
 print(test_name, "lr(20, 50000)====>", lr.predict(predict_input_poly2))
 ```
-## 다중회귀decisiontree회귀
+## decisiontree회귀
 tree에서 DecisionTreeRegressor를 사용한다.
 ```python
 from sklearn.tree import DecisionTreeRegressor
