@@ -8,6 +8,15 @@
 문 31A와 문6A에 해당하는 답변 또한 이전에 분석했던 "주관적으로 느낀 각 항목이 취업에 미친 영향"과 똑같이 1~5점 척도라고 생각했다. 하지만 이번 질문들에 대한 대답은 (1) 예, (2) 아니오 두 가지로 나뉜다. 이에 따라 연속형 -> 범주형인 로지스틱 회귀에서 범주형 -> 범주형인 카이제곱 검증으로 변경하였다.
 
 # 1.2 데이터 준비
+## 0 기본 설정
+```python
+from pyexpat import features
+import numpy as np
+import pandas as pd
+import sys
+import matplotlib.pyplot as plt
+```
+
 ## 1.1 데이터 가져오기
 데이터는 "y14a265"와 "y14b279"를 모두 답하지 않은 사람을 제외하여 준비하였다. pandas의 read_csv를 이용하여 ypdata_w14_fin.csv 파일을 불러와 사용하였다. 
 ```python
@@ -31,7 +40,7 @@ target = dataframe['취업성공여부'].to_numpy()
 ```
 
 ## 1.4 카이제곱 검증
-~~~~~를 사용해서 먼저 학점에 대한 카이제곱 검증을 시작하려고 했으나, 학점에 대한 답변이 학생은 'y14a265', 취업자는 'y14b279'로 나뉜다는 문제가 있었다. 판다스의 concat을 통해 붙여주려고 했으나, "cannot concatenate object of type '<class 'str'>'; only Series and DataFrame objs are valid" 경고 메세지가 떴다. 문자형 데이터는 concat을 통해 붙일 수 없는 것 같다. 
+chi2_contingency를 사용해서 먼저 학점에 대한 카이제곱 검증을 시작하려고 했으나, 학점에 대한 답변이 학생은 'y14a265', 취업자는 'y14b279'로 나뉜다는 문제가 있었다. 판다스의 concat을 통해 붙여주려고 했으나, "cannot concatenate object of type '<class 'str'>'; only Series and DataFrame objs are valid" 경고 메세지가 떴다. 문자형 데이터는 concat을 통해 붙일 수 없는 것 같다. 
 
 df_1 (미취업자의 df)에서 첫번째 column(학점)과 df_2 (취업자의 df)에서 첫번째 column을 붙이면 된다고 생각하였다. 각 df에서 첫번째 column만을 사용하기 위해 iloc 함수를 이용했다. 
 
