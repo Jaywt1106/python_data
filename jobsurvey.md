@@ -56,3 +56,5 @@ df_1 = df_1.fillna(0)
 df_2 = pd.DataFrame(data_2)
 df_2 = df_2.fillna(0)
 ```
+*여기서 치명적인 문제를 발견했다. 단순하게 취업자와 미취업자의 응답을 밑으로 연결해 한 column으로 연결시키는 것이 아니다. 
+
