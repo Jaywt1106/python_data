@@ -31,11 +31,15 @@ target = dataframe['취업성공여부'].to_numpy()
 ```
 
 ## 1.4 카이제곱 검증
-~~~~~를 사용해서 먼저 학점에 대한 카이제곱 검증을 시작하려고 했으나, 학점에 대한 답변이 학생은 'y14a265', 취업자는 'y14b279'로 나뉜다는 문제가 있었다. 판다스의 concat을 통해 붙여주려고 했으나, "cannot concatenate object of type '<class 'str'>'; only Series and DataFrame objs are valid" 경고 메세지가 떴다. 문자형 데이터는 concat을 통해 붙일 수 없는 것 같다.
+~~~~~를 사용해서 먼저 학점에 대한 카이제곱 검증을 시작하려고 했으나, 학점에 대한 답변이 학생은 'y14a265', 취업자는 'y14b279'로 나뉜다는 문제가 있었다. 판다스의 concat을 통해 붙여주려고 했으나, "cannot concatenate object of type '<class 'str'>'; only Series and DataFrame objs are valid" 경고 메세지가 떴다. 문자형 데이터는 concat을 통해 붙일 수 없는 것 같다. 
+iloc 내용 추가하기
+
 ```python
 df_score = pd.concat([df_1.iloc[0], df_2.iloc[0]])
 ```
 
+int를 통해 숫자로 데이터 타입을 int로 바꿔주려 했으나, 'y14a265'안에도 숫자와 Nan이 섞여 있어 불가능한 것으로 보인다. 때문에 Nan을 0으로 바꿔주려 한다. fillna를 통해 Nan을 0으로 바꿔주었다.
+```python
 df_1 = pd.DataFrame(data_1)
 df_1 = df_1.fillna(0)
 
