@@ -22,11 +22,13 @@ np.where은 조건을 만족하는 인덱스를 반환해주는 함수이다. �
 ```python
 dataframe['취업성공여부'] = np.where(pd.isna(dataframe['y14a265'])==True, 1, 2)
 ```
-
+## 1.3 데이터 분할
 ```python
 data_1 = dataframe[['y14a265', 'y14a266', 'y14a267', 'y14a268', 'y14a269', 'y14a270', 'y14a271', 'y14a272', 'y14a273', 'y14a274', 'y14a275', 'y14a276', 'y14a277']].to_numpy()
 data_2 = dataframe[['y14b279', 'y14b280', 'y14b281', 'y14b282', 'y14b283', 'y14b284', 'y14b285', 'y14b286', 'y14b287', 'y14b288', 'y14b289', 'y14b290', 'y14b291']].to_numpy()
 target = dataframe['취업성공여부'].to_numpy()
+
+
 df_1 = pd.DataFrame(data_1)
 df_1 = df_1.fillna(0)
 
