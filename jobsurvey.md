@@ -1,6 +1,6 @@
 # python_data
 
-# 1.1 필요 정보 탐색
+# 1.1 설문 데이터 확인
 이제는 학생(취업준비를 했으나 실패한 사람)이 실제로 취업을 위해 준비한 스펙과 취업자가 취업을 위해 준비한 스펙을 통해 실제로 각각의 스펙을 준비하는 것이 취업에 도움이 되었는지를 확인해보려고 한다.
 
 문 31A &#34;__님께서 취업을 위해 지금까지 준비했거나 현재 준비하고 있는 스펙은 무엇입니까?&#34;와 문6A로 "님께서 취업을 위해 준비한 스펙은 무엇입니까?"를 통해 각각이 준비한 스펙을 알 수 있을 것으로 보인다. 항목 또한 이전에 분석했던 항목들과 일치한다.(다만 학벌과 학/지/혈연이 빠져있다.) 
@@ -58,8 +58,8 @@ df_2 = df_2.fillna(0)
 ```
 *여기서 치명적인 문제를 발견했다. 단순하게 취업자와 미취업자의 응답을 밑으로 연결해 한 column으로 연결시키는 것이 아니다. 
 
-# 취업자와 미취업자의 학점 준비 여부 Column 준비하기
-학점 준비 여부 Column 이름을 score로 정하였고, 리스트를 생성했다.
+## 2.1 데이터 재정의
+1.data 간단하게 설정하기
 data는 취업자와 미취업자를 구분하지 않고 data 그대로를 사용했다.
 
 data를 그대로 다시 사용하는 과정에서 질문이 'y14a265'~'y14a277'까지로 dataframe에서 그대로 질문 명을 가져왔을 때 줄이 너무 길어지는 불편함이 있었다. for문을 사용해 column의 name들을 더 간단하게 써준다.
@@ -74,20 +74,20 @@ def get_data_column_names():
 
     return column_names
 ```
-
+2. 취업 여부 column 이름 변경
 취업 여부의 이름은 'employed'으로 설정하였다. 위에서와 똑같은 방법으로 'employed' column을 생성한다.
 ```python
 dataframe['employed'] = np.where(pd.isna(dataframe['y14a265'])==True, 1, 2)
 ```
 
-data와 target을 준비해준다.
+3. data와 target을 준비
 ```python
 column_names = get_data_column_names()
 data = dataframe[column_names].to_numpy()
 target = dataframe['employed'].to_numpy()
 ```
 
-
+4. score column 생성
 ```python
 score = []
 df_grade_merged = df_grade_data.fillna(0).max(axis=1) 
