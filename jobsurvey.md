@@ -39,7 +39,7 @@ data_2 = dataframe[['y14b279', 'y14b280', 'y14b281', 'y14b282', 'y14b283', 'y14b
 target = dataframe['취업성공여부'].to_numpy()
 ```
 
-## 1.4 카이제곱 검증
+# 2. 카이제곱 검증
 chi2_contingency를 사용해서 먼저 학점에 대한 카이제곱 검증을 시작하려고 했으나, 학점에 대한 답변이 학생은 'y14a265', 취업자는 'y14b279'로 나뉜다는 문제가 있었다. 판다스의 concat을 통해 붙여주려고 했으나, "cannot concatenate object of type '<class 'str'>'; only Series and DataFrame objs are valid" 경고 메세지가 떴다. 문자형 데이터는 concat을 통해 붙일 수 없는 것 같다. 
 
 df_1 (미취업자의 df)에서 첫번째 column(학점)과 df_2 (취업자의 df)에서 첫번째 column을 붙이면 된다고 생각하였다. 각 df에서 첫번째 column만을 사용하기 위해 iloc 함수를 이용했다. 
@@ -58,3 +58,38 @@ df_2 = df_2.fillna(0)
 ```
 *여기서 치명적인 문제를 발견했다. 단순하게 취업자와 미취업자의 응답을 밑으로 연결해 한 column으로 연결시키는 것이 아니다. 
 
+# 취업자와 미취업자의 학점 준비 여부 Column 준비하기
+학점 준비 여부 Column 이름을 score로 정하였고, 리스트를 생성했다.
+data는 취업자와 미취업자를 구분하지 않고 data 그대로를 사용했다.
+
+data를 그대로 다시 사용하는 과정에서 질문이 'y14a265'~'y14a277'까지로 dataframe에서 그대로 질문 명을 가져왔을 때 줄이 너무 길어지는 불편함이 있었다. for문을 사용해 column의 name들을 더 간단하게 써준다.
+```python
+def get_data_column_names():
+    column_names = []
+    for i in range(265, 278):
+        column_names.append('y14a' + str(i))
+
+    for i in range(279, 292):
+        column_names.append('y14b' + str(i))
+
+    return column_names
+```
+
+취업 여부의 이름은 'employed'으로 설정하였다. 위에서와 똑같은 방법으로 'employed' column을 생성한다.
+```python
+dataframe['employed'] = np.where(pd.isna(dataframe['y14a265'])==True, 1, 2)
+```
+
+data와 target을 준비해준다.
+```python
+column_names = get_data_column_names()
+data = dataframe[column_names].to_numpy()
+target = dataframe['employed'].to_numpy()
+```
+
+
+```python
+score = []
+df_grade_merged = df_grade_data.fillna(0).max(axis=1) 
+score.append(df_grade_merged)
+```
