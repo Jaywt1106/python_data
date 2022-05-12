@@ -88,8 +88,19 @@ target = dataframe['employed'].to_numpy()
 ```
 
 4. score column 생성
+data의 첫번째 column과 14번째 column이 똑같이 학점과 관련된 질문이므로 둘을 비교해야 한다. 첫번째 column과 14번째 column의 데이터 길이가 같은지 확인하였다.
+
+먼저 두 column에서 Nan인 데이터를 0으로 바꾼다. 그 다음 score 리스트를 만들어 두고, 두 column을 비교하면서 더 큰 숫자를 score로 반환하도록 하면 된다. 이렇게 반환된 숫자들을 score 리스트에 append를 통해 추가해준다. (첫번째 column에 답을 하지 않아 Nan인 경우를 0으로 바꾸고, 14번째 column의 수와 비교하면 답을 한 14번째의 수가 무조건 더 크다는 것을 활용하였다.)
 ```python
 score = []
+print("the number of columns in data:", len(data[0]))
+print("the length of the 1st column in data:", len(data[:, [0]]))
+print("the length of the 14th column in data:", len(data[:, [13]]))
+grade_data = data[:, [0, 13]]
+print("the number of columns in grade_data:", len(grade_data[0]))
+print("the length of the student column in grade_data:", len(grade_data[:, [0]]))
+print("the length of the worker column in grade_data:", len(grade_data[:, [1]]))
+df_grade_data = pd.DataFrame(grade_data)
 df_grade_merged = df_grade_data.fillna(0).max(axis=1) 
 score.append(df_grade_merged)
 ```
