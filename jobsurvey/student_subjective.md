@@ -22,7 +22,7 @@ import sys
 import matplotlib.pyplot as plt
 ```
 ## 2.1 데이터 불러오기
-14차 조사의 첫번째 데이터 파일을 불러온다. pd.read_csv
+pd.read_csv를 통해 14차 조사의 첫번째 데이터 파일을 불러온다. 
 그중 문 31C에 해당하는 'y14a351'~'y14a374'와 'y14a601'에 해당하는 column만을 사용하려고 한다. 해당 column들을 col_names를 통해 묶어준 뒤, loc을 활용해 해당 column들만 df_sample로 뽑아준다.
 ```python
 data_s = pd.read_csv('c:\\workspace\\downloads\\ypdata_w14.csv')
@@ -61,3 +61,42 @@ plt.xticks(index, labels, fontsize=10)
 plt.rc('font', family='NanumGothic') # For Windows
 print(plt.rcParams['font.family'])
 ```
+## 2.4 결과
+
+# 3 취업자 데이터 분석
+## 3.1 데이터 불러오기
+pd.read_csv를 통해 14차 조사의 첫번째 데이터 파일을 불러온다. 
+그중 문 ****C에 해당하는 'y14b293'~'y14b306'와 'y14b396'에 해당하는 column만을 사용하려고 한다. 해당 column들을 col_names를 통해 묶어준 뒤, loc을 활용해 해당 column들만 df_sample로 뽑아준다.
+```python
+data_w = pd.read_csv('c:\\workspace\\downloads\\ypdata_w14_1.csv', low_memory=False)
+col_names2 = ['y14b293', 'y14b294', 'y14b295', 'y14b296', 'y14b297', 'y14b298', 'y14b299', 'y14b300', 'y14b301', 'y14b302', 'y14b303', 'y14b304', 'y14b305', 'y14b306', 'y14b396']
+df_sample2 = data_w.loc[:, col_names2]
+```
+
+## 3.2 평균 구하기
+각 항목에 대한 평균을 구한다. 똑같은 구문을 반복하는 것이기 때문에 for 문을 활용한다.
+mean_df_array 리스트를 미리 만들어두고, 각 요소의 평균을 구한 뒤 리스트에 append를 통해 추가한다.
+```python
+mean_df_array2 = []
+
+for each_col_name2 in col_names2: 
+    mean_df_array2.append(df_sample2[each_col_name2].mean())
+```
+
+## 3.3 그래프로 표현하기
+바 그래프를 통해 평균이 높은 요소들을 시각적으로 볼 수 있게 한다. plt.bar를 활용한다.
+title은 '14th worker sub'로 14차 취업자의 주관적인 답변이다.
+xlabel은 'Questions'로 각 요소이다.
+ylabel은 'Score'로 학생이 생각하는 중요도 점수이다.
+
+질문을 'y14b**'로 표현하면 어떤 요소에 대한 질문인지 알기 어렵기 때문에 labels를 활용했다. 학생의 요소와 순서는 똑같기 때문에 같은 labels를 활용한다.
+```python
+index2 = np.arange(len(col_names2))
+plt.bar(index2, mean_df_array2)
+plt.title('14th worker sub', fontsize=20)
+plt.xlabel('Questions', fontsize=18)
+plt.ylabel('Score', fontsize=18)
+plt.xticks(index2, labels, fontsize=10)
+```
+
+## 3.4 결과
