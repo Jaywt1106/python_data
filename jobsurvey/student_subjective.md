@@ -32,9 +32,32 @@ df_sample = data_s.loc[:, col_names]
 ```
 
 ## 2.2 평균 구하기
+각 항목에 대한 평균을 구한다. 똑같은 구문을 반복하는 것이기 때문에 for 문을 활용한다.
+mean_df_array 리스트를 미리 만들어두고, 각 요소의 평균을 구한 뒤 리스트에 append를 통해 추가한다.
 ```python
 mean_df_array = []
 
 for each_col_name in col_names: 
     mean_df_array.append(df_sample[each_col_name].mean())
+```
+## 2.3 그래프로 표현하기
+바 그래프를 통해 평균이 높은 요소들을 시각적으로 볼 수 있게 한다. plt.bar를 활용한다.
+title은 '14th student sub'로 14차 학생의 주관적인 답변이다.
+xlabel은 'Questions'로 각 요소이다.
+ylabel은 'Score'로 학생이 생각하는 중요도 점수이다.
+
+질문을 'y14a**'로 표현하면 어떤 요소에 대한 질문인지 알기 어렵기 때문에 labels를 활용했다.
+```python
+labels = ['학벌', '학점', '공인영어성적', '영어회화', '제2외국어', '한자능력', '컴퓨터 자격증', '직무관련 자격', '해외경험', '인턴경험', '공모전 경력', '석박사 학위', '봉사경험', '동아리경험', '학지혈연']
+index = np.arange(len(col_names))
+plt.bar(index, mean_df_array)
+plt.title('14th student sub', fontsize=20)
+plt.xlabel('Questions', fontsize=18)
+plt.ylabel('Score', fontsize=18)
+plt.xticks(index, labels, fontsize=10)
+```
+```python
+한글 폰트를 사용하기 위해 세팅하였다.
+plt.rc('font', family='NanumGothic') # For Windows
+print(plt.rcParams['font.family'])
 ```
