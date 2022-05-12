@@ -25,3 +25,18 @@ import pandas as pd
 import sys
 import matplotlib.pyplot as plt
 ```
+## 2.1 데이터 불러오기
+```python
+data_s = pd.read_csv('c:\\workspace\\downloads\\ypdata_w14.csv')
+col_names = ['y14a361', 'y14a362', 'y14a363', 'y14a364', 'y14a365', 'y14a366', 'y14a367', 'y14a368', 'y14a369', 'y14a370', 'y14a371', 'y14a372', 'y14a373', 'y14a374', 'y14a601']
+
+df_sample = data_s.loc[:, col_names]
+```
+
+## 2.2 평균 구하기
+```python
+mean_df_array = []
+
+for each_col_name in col_names: 
+    mean_df_array.append(df_sample[each_col_name].mean())
+```
