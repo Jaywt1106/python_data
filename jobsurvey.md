@@ -1,13 +1,13 @@
 # python_data
 
-# 1.1 설문 데이터 확인
+# 1 설문 데이터 확인
 이제는 학생(취업준비를 했으나 실패한 사람)이 실제로 취업을 위해 준비한 스펙과 취업자가 취업을 위해 준비한 스펙을 통해 실제로 각각의 스펙을 준비하는 것이 취업에 도움이 되었는지를 확인해보려고 한다.
 
 문 31A &#34;__님께서 취업을 위해 지금까지 준비했거나 현재 준비하고 있는 스펙은 무엇입니까?&#34;와 문6A로 "님께서 취업을 위해 준비한 스펙은 무엇입니까?"를 통해 각각이 준비한 스펙을 알 수 있을 것으로 보인다. 항목 또한 이전에 분석했던 항목들과 일치한다.(다만 학벌과 학/지/혈연이 빠져있다.) 
 
 문 31A와 문6A에 해당하는 답변 또한 이전에 분석했던 "주관적으로 느낀 각 항목이 취업에 미친 영향"과 똑같이 1~5점 척도라고 생각했다. 하지만 이번 질문들에 대한 대답은 (1) 예, (2) 아니오 두 가지로 나뉜다. 이에 따라 연속형 -> 범주형인 로지스틱 회귀에서 범주형 -> 범주형인 카이제곱 검증으로 변경하였다.
 
-# 1.2 데이터 준비
+# 2 데이터 준비
 ## 0 기본 설정
 ```python
 from pyexpat import features
@@ -39,7 +39,7 @@ data_2 = dataframe[['y14b279', 'y14b280', 'y14b281', 'y14b282', 'y14b283', 'y14b
 target = dataframe['취업성공여부'].to_numpy()
 ```
 
-# 2. 카이제곱 검증
+# 3. 데이터 재정의
 chi2_contingency를 사용해서 먼저 학점에 대한 카이제곱 검증을 시작하려고 했으나, 학점에 대한 답변이 학생은 'y14a265', 취업자는 'y14b279'로 나뉜다는 문제가 있었다. 판다스의 concat을 통해 붙여주려고 했으나, "cannot concatenate object of type '<class 'str'>'; only Series and DataFrame objs are valid" 경고 메세지가 떴다. 문자형 데이터는 concat을 통해 붙일 수 없는 것 같다. 
 
 df_1 (미취업자의 df)에서 첫번째 column(학점)과 df_2 (취업자의 df)에서 첫번째 column을 붙이면 된다고 생각하였다. 각 df에서 첫번째 column만을 사용하기 위해 iloc 함수를 이용했다. 
@@ -58,8 +58,7 @@ df_2 = df_2.fillna(0)
 ```
 *여기서 치명적인 문제를 발견했다. 단순하게 취업자와 미취업자의 응답을 밑으로 연결해 한 column으로 연결시키는 것이 아니다. 
 
-## 2.1 데이터 재정의
-1.data 간단하게 설정하기
+## 3.1 data 간단하게 설정하기
 data는 취업자와 미취업자를 구분하지 않고 data 그대로를 사용했다.
 
 data를 그대로 다시 사용하는 과정에서 질문이 'y14a265'~'y14a277'까지로 dataframe에서 그대로 질문 명을 가져왔을 때 줄이 너무 길어지는 불편함이 있었다. for문을 사용해 column의 name들을 더 간단하게 써준다.
@@ -74,20 +73,20 @@ def get_data_column_names():
 
     return column_names
 ```
-2. 취업 여부 column 이름 변경
+## 3.2 취업 여부 column 이름 변경
 취업 여부의 이름은 'employed'으로 설정하였다. 위에서와 똑같은 방법으로 'employed' column을 생성한다.
 ```python
 dataframe['employed'] = np.where(pd.isna(dataframe['y14a265'])==True, 1, 2)
 ```
 
-3. data와 target을 준비
+## 3.3 data와 target을 준비
 ```python
 column_names = get_data_column_names()
 data = dataframe[column_names].to_numpy()
 target = dataframe['employed'].to_numpy()
 ```
 
-4. score column 생성
+## 3.4 score column 생성
 data의 첫번째 column과 14번째 column이 똑같이 학점과 관련된 질문이므로 둘을 비교해야 한다. 첫번째 column과 14번째 column의 데이터 길이가 같은지 확인하였다.
 
 ```python
