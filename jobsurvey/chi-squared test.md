@@ -149,3 +149,12 @@ for i in range(0, len(score)):
 
 print("score data: 1={}, 2={}, error={}".format(val1Records, val2Records,errors ))
 ```
+결과 : score data: 1=274, 2=879, error=0 으로 제대로 된 데이터라는 것을 알 수 있다.
+
+카이제곱 검증에 활용하기 위해 score를 np로 바꿔주었다.
+```python
+score_array = np.array(score)
+print(score_array)
+```
+
+이제 모든 데이터 준비는 마쳤다.
