@@ -130,4 +130,22 @@ for i in range(0, len(grade_data)):
          df_grade_merged.append(col1)
     else:
          df_grade_merged.append(col2)
-         ```
+```
+
+pritn(score)를 해봤을 때 계속 2만 출력되었다. score 안에 데이터가 2밖에 없는 문제가 있지 않을까라는 생각이 들어 직접 score 안의 1과 2의 개수를 확인해보았다.
+```python
+val1Records = 0
+val2Records = 0
+errors = 0
+
+for i in range(0, len(score)):
+        # print(">>>>", df_grade_merged[i])
+        if (score[i]) == 1:
+            val1Records += 1
+        elif (score[i]) == 2:
+            val2Records += 1
+        else:
+            errors += 1
+
+print("score data: 1={}, 2={}, error={}".format(val1Records, val2Records,errors ))
+```
