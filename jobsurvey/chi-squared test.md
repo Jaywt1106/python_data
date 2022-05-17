@@ -151,10 +151,57 @@ print("score data: 1={}, 2={}, error={}".format(val1Records, val2Records,errors 
 ```
 결과 : score data: 1=274, 2=879, error=0 으로 제대로 된 데이터라는 것을 알 수 있다.
 
-카이제곱 검증에 활용하기 위해 score를 np로 바꿔주었다.
+카이제곱 검정에 활용하기 위해 score를 np로 바꿔주었다.
 ```python
 score_array = np.array(score)
 print(score_array)
 ```
 
 이제 모든 데이터 준비는 마쳤다.
+
+# 4. 카이제곱 검정
+## 4.1 crosstab 그려보기
+score_final은 학점 준비여부로 1이 준비O, 2가 준비 X이다. employed_final은 취업 성공여부로 1이 취업O, 2가 취업X이다.
+margins=True는 행과 열의 sum한 합계 값이 포함이 된다는 것이다.
+```python
+df = pd.DataFrame({"score_final":score_array, "employed_final":target})
+crosstab = pd.crosstab(df['employed_final'], df['score_final'], margins=True)
+print(crosstab)
+```
+결과는 다음과 같다.
+score_final     1.0  2.0   All
+employed_final
+1               253  866  1119
+2                21   13    34
+All             274  879  1153
+
+## 4.2 chi2_contingency로 카이제곱 검정하기
+```python
+from scipy.stats import chi2_contingency
+```
+카이제곱 검정을 위해서는 margins=False로 설정해줘야 한다.
+```python
+score_crosstab = crosstab = pd.crosstab(df['employed_final'], df['score_final'], margins=False)
+result = chi2_contingency(observed=score_crosstab, correction=False)
+print("1. 카이제곱 통계량:", result[0])
+print("2. p-value:", result[1])
+print("3. df:", result[2])
+print("4. 기대값 행렬:")
+score_final = pd.DataFrame(result[3]).rename(index={0:'관리O', 1:'관리X'}, columns={0: '취업O', 1: '취업X'})
+print(score_final)
+```
+결과는 다음과 같다.
+1               253  866  1119
+2                21   13    34
+All             274  879  1153
+1. 카이제곱 통계량: 27.924056069179635
+2. p-value: 1.2617134959006774e-07
+3. df: 1
+4. 기대값 행렬:
+            취업O         취업X
+관리O  265.920208  853.079792
+관리X    8.079792   25.920208
+
+p-value값이 0.05보다 크기 때문에 유의미하다고 볼 수 없다.
+데이터를 다시 살펴보면 14차 -1의 조사자 중 해당 질문에 답변을 한 사람 수가 굉장히 적었다.
+그 중 취업을 한 사람이 안 한 사람에 비해 월등히 많았다. 때문에 14차 조사의 전체를 활용한다면 다른 결과가 나올 수도 있을 것으로 보인다.
