@@ -101,8 +101,33 @@ print("the length of the worker column in grade_data:", len(grade_data[:, [1]]))
 ```
 먼저 두 column에서 Nan인 데이터를 0으로 바꾼다. 그 다음 score 리스트를 만들어 두고, 두 column을 비교하면서 더 큰 숫자를 score로 반환하도록 하면 된다. 여기서 fillna(0)(Nan인 경우 0을 채워줌)와 max(axis=1)(column 방향으로 비교해 더 큰 수 반환해줌)을 써준다. 이렇게 반환된 숫자들을 score 리스트에 append를 통해 추가해준다. (첫번째 column에 답을 하지 않아 Nan인 경우를 0으로 바꾸고, 14번째 column의 수와 비교하면 답을 한 14번째의 수가 무조건 더 크다는 것을 활용하였다.)
 ```python
-score = []
-df_grade_data = pd.DataFrame(grade_data)
-df_grade_merged = df_grade_data.fillna(0).max(axis=1) 
-score.append(df_grade_merged)
+#score = []
+#df_grade_data = pd.DataFrame(grade_data)
+#df_grade_merged = df_grade_data.fillna(0).max(axis=1) 
+#score.append(df_grade_merged)
 ```
+오류가 계속되고 차원이 맞지 않는 문제가 발생했다. score에 하나씩 추가를 하는 접근이 잘못된 것이다. df_grade_data.fillna(0).max(axis=1) 자체를 score로 사용하면 된다.
+
+바로 위의 코드를 다음고 같이 바꿔준다.
+```python
+df_grade_data = pd.DataFrame(grade_data)
+score = df_grade_data.fillna(0).max(axis=1) 
+```
+처음에 오류가 계속되었을 때는 fillna(0).max(axix=1) 자체의 문제라고 생각했다. 이 대신 if문을 사용해 직접 하나씩 푸는 방법도 있다.
+```python
+df_grade_merged = []
+for i in range(0, len(grade_data)):
+    col1 = 0
+    col2 = 0
+    # print(">>>>", grade_data[0])
+    if (not math.isnan(grade_data[i][0])):
+         col1 = grade_data[i][0]    
+    
+    if (not math.isnan(grade_data[i][1])):
+         col2 = grade_data[i][1]    
+    
+    if (col1 > col2):
+         df_grade_merged.append(col1)
+    else:
+         df_grade_merged.append(col2)
+         ```
