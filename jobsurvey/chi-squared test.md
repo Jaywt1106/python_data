@@ -191,9 +191,7 @@ score_final = pd.DataFrame(result[3]).rename(index={0:'관리O', 1:'관리X'}, c
 print(score_final)
 ```
 결과는 다음과 같다.
-1               253  866  1119
-2                21   13    34
-All             274  879  1153
+
 1. 카이제곱 통계량: 27.924056069179635
 2. p-value: 1.2617134959006774e-07
 3. df: 1
