@@ -204,10 +204,61 @@ print(score_final)
 
 p-value값이 0.05보다 크기 때문에 서로 독립이라고 할 수 있다. 즉 학점은 취업 성공에 유의미한 요소가 아니다.
 
+# 5. 전체 변수 검정
+학점 외에 12개의 요소들도 취업에 영향을 미치는가를 카이제곱 검정을 통해 알아볼 것이다. For 문을 사용해 파일에서 뽑아 쓰는 column의 값만 다르게 해주면 된다.
+첫번째 요소는 0번째와 13번째 column을 사용했으니, 두번째 요소는 1번째와 14번째, 세번째 요소는 2번째와 15번째 column..이런식으로 사용하면 된다.
+```python
+for i in range(0, 13):
+    grade_data = data[:, [i, i + 13]]
+    print("---------the result of ", i+1 ,"th element---------")
+    print("the number of columns in grade_data:", len(grade_data[0]))
+    print("the length of the student column in grade_data:", len(grade_data[:, [0]]))
+    print("the length of the worker column in grade_data:", len(grade_data[:, [1]]))
 
 
+    df_grade_data = pd.DataFrame(grade_data)
 
+    # student, worker를 하나의 컬럼으로 이동 (nan 값은 사용하지 않음)
+    score = df_grade_data.fillna(0).max(axis=1) 
 
+    val1Records = 0
+    val2Records = 0
+    errors = 0
 
+    for i in range(0, len(score)):
+            # print(">>>>", df_grade_merged[i])
+            if (score[i]) == 1:
+                val1Records += 1
+            elif (score[i]) == 2:
+                val2Records += 1
+            else:
+                errors += 1
+
+    print("score data: 1={}, 2={}, error={}".format(val1Records, val2Records,errors ))
+
+    score_array = np.array(score)
+    print(score_array)
+
+    print(target)
+
+    df = pd.DataFrame({"score_final":score_array, "employed_final":target})
+    crosstab = pd.crosstab(df['employed_final'], df['score_final'], margins=True)
+    print(crosstab)
+
+    score_crosstab = crosstab = pd.crosstab(df['employed_final'], df['score_final'], margins=False)
+    result = chi2_contingency(observed=score_crosstab, correction=False)
+    print("1. 카이제곱 통계량:", result[0])
+    print("2. p-value:", result[1])
+    print("3. df:", result[2])
+    print("4. 기대값 행렬:")
+    score_final = pd.DataFrame(result[3]).rename(index={0:'관리O', 1:'관리X'}, columns={0: '취업O', 1: '취업X'})
+    print(score_final)
+```
+for문을 만들어 grade_data = data[:, [i, i+13]]으로 두었다. 각 요소마다 나뉘는 것을 확실히 보여주기 위해     
+print("---------the result of ", i+1 ,"th element---------")를 통해 경계를 나눠주었다.
+
+그 결과 p값이 0.05보다 작은 변수는 3번째, 4번째, 5번째, 6번째 변수였다. 즉, 영어회화, 제 2외국어, 한자, 컴퓨터 관련 자격증이 취업 성공에 영향을 주는 변수라고 할 수 있다.
+
+# 6. --
 데이터를 다시 살펴보면 14차 -1의 조사자 중 해당 질문에 답변을 한 사람 수가 굉장히 적었다.
 그 중 취업을 한 사람이 안 한 사람에 비해 월등히 많았다. 때문에 14차 조사의 전체를 활용한다면 다른 결과가 나올 수도 있을 것으로 보인다.
